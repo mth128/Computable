@@ -31,7 +31,9 @@ namespace Computable
 
     public string Equation => Int.ToString(); 
 
-    public string Type => "Integer"; 
+    public string Type => "Integer";
+
+    public int RadicalDepth => 0; 
 
     public Integer (long value)
     {

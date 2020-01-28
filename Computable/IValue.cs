@@ -16,6 +16,8 @@ namespace Computable
     string Equation { get; }
     string Type { get; }
 
+    int RadicalDepth { get; }
+
     IValue Negate();
     IValue Simple();
 
@@ -23,6 +25,8 @@ namespace Computable
     Radical ToRadical();
     Integer ToInteger();
     IValue Squared();
+
+
   }
 
   public static class IValueExtension

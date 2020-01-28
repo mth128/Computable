@@ -28,6 +28,16 @@ namespace Computable
 
     public string Type => "Product";
 
+    public int RadicalDepth
+    {
+      get
+      {
+        int depth1 = First.RadicalDepth;
+        int depth2 = Second.RadicalDepth;
+        return depth1 > depth2 ? depth1 : depth2; 
+      }
+    }
+
     public Product(IValue first, IValue second)
     {
       first = first.Direct();

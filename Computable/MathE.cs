@@ -11,9 +11,16 @@ namespace Computable
     public static IValue Sqrt(IValue value)
     {
       if (value.Negative)
-        throw new ArgumentOutOfRangeException("Square root of negative not allowed.");
+        return new ComplexNumber(value); 
 
       return new Radical(value).Simple(); 
+    }
+    public static IValue Abs(IValue value)
+    {
+      if (value.Negative)
+        return value.Negate();
+
+      return value; 
     }
   }
 }

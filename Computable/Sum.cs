@@ -30,13 +30,25 @@ namespace Computable
 
     public string Type => "Sum";
 
+    public int RadicalDepth
+    {
+      get
+      {
+        int depth1 = First.RadicalDepth;
+        int depth2 = Second.RadicalDepth;
+        return depth1 > depth2 ? depth1 : depth2;
+      }
+    }
+
+
     public Sum(IValue first, IValue second)
     {
       Set(first, second); 
     }
 
-    private void Set(IValue first, IValue second, bool firstIteration = true)
-    { 
+    private void Set(IValue first, IValue second, bool firstItteration = true)
+    {
+      this.firstItteration = firstItteration; 
       first = first.Direct();
       second = second.Direct();
 
@@ -79,35 +91,42 @@ namespace Computable
       List<IValue> sumComponents = GetSumComponents(first);
       sumComponents.AddRange(GetSumComponents(second));
 
-      List<IValue> eliminated = TryEliminateComponents(sumComponents);
+      if (firstItteration)
+      {
+        List<IValue> eliminated = TryEliminateComponents(sumComponents, firstItteration);
+        if (eliminated.Count == sumComponents.Count)
+        {
+          First = first;
+          Second = second;
+          return;
+        }
 
-      if (eliminated.Count == sumComponents.Count)
+        if (eliminated.Count == 0)
+        {
+          First = new Integer(0);
+          Second = new Integer(0);
+          return;
+        }
+
+        First = eliminated[0];
+        if (eliminated.Count == 1)
+        {
+          Second = new Integer(0);
+          return;
+        }
+        if (eliminated.Count == 2)
+        {
+          Second = eliminated[1];
+          return;
+        }
+        eliminated.RemoveAt(0);
+        Second = new Sum(eliminated);
+      }
+      else
       {
         First = first;
-        Second = second;
-        return;
+        Second = second; 
       }
-
-      if (eliminated.Count == 0)
-      {
-        First = new Integer(0);
-        Second = new Integer(0);
-        return;
-      }
-
-      First = eliminated[0];
-      if (eliminated.Count == 1)
-      {
-        Second = new Integer(0);
-        return;
-      }
-      if (eliminated.Count == 2)
-      {
-        Second = eliminated[1];
-        return;
-      }
-      eliminated.RemoveAt(0);
-      Second = new Sum(eliminated); 
     }
 
     public Sum(List<IValue> values)
@@ -127,7 +146,7 @@ namespace Computable
       Second = new Sum(values);
     }
 
-    private List<IValue> TryEliminateComponents(List<IValue> components)
+    private List<IValue> TryEliminateComponents(List<IValue> components, bool firstItteration)
     {
       Integer integer = new Integer(0);
       Fraction fraction = new Fraction(new Integer(0), new Integer (1)); 
@@ -154,9 +173,10 @@ namespace Computable
           bool added = false; 
           for (int i =0; i<radicals.Count;i++)
           {
-            Radical current = radicals[i]; 
-            IValue sum = radical + current;
-            if (sum is Radical combination)
+            Radical current = radicals[i];
+            Sum sum = new Sum(new Integer(0),new Integer(0));
+            sum.Set(radical, current, !firstItteration); 
+            if (sum.Simple() is Radical combination)
             {
               radicals[i] = combination;
               added = true; 

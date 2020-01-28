@@ -23,9 +23,23 @@ namespace Computable
 
     public bool IsSimpleFraction => Numerator is Integer && Denominator is Integer;
 
-    public string Equation => Numerator.Equation + "/" + Denominator.Equation;
+    public string Equation => "("+Numerator.Equation + "/" + Denominator.Equation+")";
 
-    public string Type => "Fraction"; 
+    public string Type => "Fraction";
+
+
+    public int RadicalDepth
+    {
+      get
+      {
+        int depth1 = Numerator.RadicalDepth;
+        int depth2 = Denominator.RadicalDepth;
+        return depth1 > depth2 ? depth1 : depth2;
+      }
+    }
+
+
+
 
     public Fraction(IValue numerator, IValue denominator)
     {
@@ -78,7 +92,7 @@ namespace Computable
         int d = 0;
         int n = 0;
         long newD = 1;
-        long newN = 1;
+        long newN = numerator < 0 ? -1 : 1;
         long currentD;
         long currentN; 
         while (d<dFactors.Count && n<nFactors.Count)
@@ -147,6 +161,7 @@ namespace Computable
       }
     }
 
+
     public IValue Negate()
     {
       if (Denominator.Negative)
@@ -158,6 +173,17 @@ namespace Computable
     {
       if (Denominator is Integer denominator && denominator == 1)
         return Numerator;
+
+      if (Denominator is Fraction denominatorFraction)
+      {
+        return new Fraction(new Product(Numerator, denominatorFraction.Denominator).Simple(), denominatorFraction.Numerator).Simple(); 
+      }
+
+      if (Numerator is Fraction numeratorFraction)
+      {
+        return new Fraction(numeratorFraction.Numerator, new Product(numeratorFraction.Denominator, Denominator).Simple()).Simple(); 
+      }
+
       return this; 
     }
 

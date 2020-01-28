@@ -24,6 +24,8 @@ namespace Computable
 
     public string Type => content.Type;
 
+    public int RadicalDepth => content.RadicalDepth;
+
     public Equation(IValue value)
     {
       if (value == null)

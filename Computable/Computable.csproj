@@ -46,7 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComplexNumber.cs" />
     <Compile Include="Equation.cs" />
+    <Compile Include="QuadraticFormula.cs" />
     <Compile Include="TestForm.cs">
       <SubType>Form</SubType>
     </Compile>
