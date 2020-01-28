@@ -143,5 +143,10 @@ namespace Computable
     {
       return new Integer(Int * Int); 
     }
+
+    public override string ToString()
+    {
+      return "[" + Type + "]" + Int.ToString(); 
+    }
   }
 }

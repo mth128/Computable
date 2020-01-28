@@ -101,7 +101,30 @@ namespace Computable
         return ToFraction();
       if (Radicalable)
         return ToRadical();
+      if (First is Product firstProduct)
+      {
+        IValue simple = TrySimplify(firstProduct,Second);
+        if (simple != null)
+          return simple; 
+      }
+      if (Second is Product secondProduct)
+      {
+        IValue simple = TrySimplify(secondProduct, First);
+        if (simple != null)
+          return simple;
+      }
       return this; 
+    }
+
+    private IValue TrySimplify(Product product, IValue other)
+    {
+      IValue a = new Product(product.First, other).Simple();
+      if (!(a is Product))
+        return new Product(a, product.Second).Simple();
+      IValue b = new Product(product.Second, other).Simple();
+      if (!(b is Product))
+        return new Product(b, product.First).Simple(); 
+      return null; 
     }
 
     public Fraction ToFraction()

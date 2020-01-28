@@ -67,6 +67,13 @@ namespace Computable
           Coefficient = new Fraction(coefficientNumerator, coefficientDenominator);
           return; 
         }
+        else
+        {          
+          Coefficient = new Fraction(new Integer(1),fraction.Denominator).Simple();
+          Radicant = new Product(fraction.Numerator, fraction.Denominator).Simple();
+          Simplify();
+          return; 
+        }
       }
       if (value is Radical radical)
       {
@@ -151,6 +158,7 @@ namespace Computable
         Radicant = new Product(Radicant, coefficient.Radicant).Simple(); 
       }
 
+
     }
 
     public IValue Negate() => -this; 
@@ -173,6 +181,13 @@ namespace Computable
           if (denested != null)
             return new Product(denested,Coefficient).Simple(); 
         }
+      }
+
+      if (Radicant is Product product)
+      {
+        IValue radical1 = new Radical(product.First, Coefficient).Simple();
+        IValue radical2 = new Radical(product.Second).Simple();
+        return new Product(radical1, radical2).Simple();
       }
 
       return this; 
