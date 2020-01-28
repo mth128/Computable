@@ -113,6 +113,14 @@ namespace Computable
         if (simple != null)
           return simple;
       }
+
+      if (First is Sum firstSum)
+        return new Sum(new Product(firstSum.First, Second).Simple(), new Product(firstSum.Second, Second).Simple()).Simple();
+
+      if (Second is Sum secondSum)
+        return new Sum(new Product(secondSum.First, First).Simple(), new Product(secondSum.Second, First).Simple()).Simple();
+
+
       return this; 
     }
 

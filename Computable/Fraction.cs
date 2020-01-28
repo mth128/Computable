@@ -80,7 +80,7 @@ namespace Computable
           Denominator = new Integer(1); 
           return; 
         }
-        if (denominator % numerator == 0)
+        if (denominator % numerator == 0 && numerator!=-1)
         {
           Denominator = denominator / numerator;
           Numerator = new Integer(1);
@@ -171,6 +171,9 @@ namespace Computable
 
     public IValue Simple()
     {
+      if (Denominator.Negative)
+        return new Fraction(Numerator.Negate(), Denominator.Negate()).Simple(); 
+      
       if (Denominator is Integer denominator && denominator == 1)
         return Numerator;
 
